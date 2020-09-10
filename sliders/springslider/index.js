@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useTransition, animated } from "react-spring";
+import { ImArrowLeft, ImArrowRight } from "react-icons/im";
 import styles from "./styles.module.scss";
 import { RedBlackBlue } from "../../constants";
 
@@ -28,7 +29,7 @@ const myBackground = [
   RedBlackBlue.darkBlue,
   RedBlackBlue.darkRed,
   RedBlackBlue.lightRed,
-  RedBlackBlue.lightWhite,
+
   RedBlackBlue.black,
   RedBlackBlue.lightBlue,
   RedBlackBlue.green,
@@ -42,7 +43,7 @@ function App({ content = [], config = {}, background = [] }) {
   const [data, setData] = useState(pages);
   const [dataLength, setDataLength] = useState(3);
   //create elements
-
+  const [isItRevers, setRevers] = useState(false);
   //update state
   React.useEffect(() => {
     console.log("use effect");
@@ -65,24 +66,43 @@ function App({ content = [], config = {}, background = [] }) {
   // console.log(data);
 
   const handleClick = (e) => {
-    console.log(e, "handleCLick");
+    // console.log(e, "handleCLick");
     e.preventDefault();
+    isItRevers && setRevers(false);
     return set((state) => (state + 1) % dataLength);
   };
   const handleNextClick = (e) => {
     e.preventDefault();
-    console.log("index1 ", index);
-
+    // console.log("index1 ", index);
+    !isItRevers && setRevers(true);
     set((state) => (state - 1 < 0 ? dataLength - 1 : state - 1));
-    console.log("index2: ", index);
+    // console.log("index2: ", index);
   };
   //create animation
   const transitions = useTransition(index, (p) => p, {
+    to: { opacity: 1, transform: "translate3d(0,0,100%)" },
     from: { opacity: 0, transform: "translate3d(100%,0,0)" },
     enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
-    leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,0,-50%)" },
     config: { mass: 30, tension: 800, friction: 180, ...config },
   });
+  const transitions2 = useTransition(index, (p) => p, {
+    to: { opacity: 1, transform: "translate3d(0,0,0)" },
+    from: { opacity: 0, transform: "translate3d(-100%,0,0)" },
+    enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
+    leave: { opacity: 0, transform: "translate3d(0,0,-50%)" },
+    config: { mass: 30, tension: 800, friction: 180, ...config },
+  });
+
+  const transition = isItRevers
+    ? transitions2.map(({ item, props, key }) => {
+        const Page = data[item] || [];
+        return <Page key={key} style={props} />;
+      })
+    : transitions.map(({ item, props, key }) => {
+        const Page = data[item] || [];
+        return <Page key={key} style={props} />;
+      });
 
   return (
     <div className={styles.simpleTransMain}>
@@ -90,17 +110,15 @@ function App({ content = [], config = {}, background = [] }) {
         className={[styles.arrows, styles.previos].join(" ")}
         onClick={handleClick}
       >
-        A
+        <ImArrowLeft className={styles.arrowIcon} />
       </span>
-      {transitions.map(({ item, props, key }) => {
-        const Page = data[item] || [];
-        return <Page key={key} style={props} />;
-      })}
+      {console.log(isItRevers)}
+      {transition}
       <span
         className={[styles.arrows, styles.next].join(" ")}
         onClick={handleNextClick}
       >
-        B
+        <ImArrowRight className={styles.arrowIcon} />
       </span>
     </div>
   );
