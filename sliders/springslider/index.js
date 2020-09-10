@@ -33,7 +33,7 @@ const myBackground = [
   RedBlackBlue.green,
 ];
 
-const myConfig = { mass: 30, tension: 800, friction: 180 };
+const myConfig = { mass: 100, tension: 770, friction: 26 };
 
 function App({ content = [], config = {}, background = [] }) {
   const [index, set] = useState(0);
@@ -55,7 +55,7 @@ function App({ content = [], config = {}, background = [] }) {
           {x}
         </animated.div>
       ));
-    // console.log(myData);
+    console.log(config);
     setData(myDataContent);
     setDataLength(myDataContent.length);
     console.log(data, myDataContent);
@@ -70,7 +70,7 @@ function App({ content = [], config = {}, background = [] }) {
     from: { opacity: 0, transform: "translate3d(100%,0,0)" },
     enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
     leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
-    config: { ...config },
+    config: { mass: 30, tension: 800, friction: 180, ...config },
   });
 
   return (
