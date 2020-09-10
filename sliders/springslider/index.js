@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import { RedBlackBlue } from "../../constants";
 
 const myContent = ["ala", "bala", "nica", "d", "hjkdshdkjs"];
+const myContent2 = ["1", "2", "3", "4", "5"];
 const pages = [
   ({ style }) => (
     <animated.div style={{ ...style, background: RedBlackBlue.green }}>
@@ -33,7 +34,7 @@ const myBackground = [
   RedBlackBlue.green,
 ];
 
-const myConfig = { mass: 100, tension: 770, friction: 26 };
+const myConfig = { mass: 30, tension: 800, friction: 180 };
 
 function App({ content = [], config = {}, background = [] }) {
   const [index, set] = useState(0);
@@ -55,16 +56,26 @@ function App({ content = [], config = {}, background = [] }) {
           {x}
         </animated.div>
       ));
-    console.log(config);
+    // console.log(config);
     setData(myDataContent);
     setDataLength(myDataContent.length);
-    console.log(data, myDataContent);
+    // console.log(data, myDataContent);
   }, []);
 
   // console.log(data);
 
-  const onClick = () => set((state) => (state + 1) % dataLength);
+  const handleClick = (e) => {
+    console.log(e, "handleCLick");
+    e.preventDefault();
+    return set((state) => (state + 1) % dataLength);
+  };
+  const handleNextClick = (e) => {
+    e.preventDefault();
+    console.log("index1 ", index);
 
+    set((state) => (state - 1 < 0 ? dataLength - 1 : state - 1));
+    console.log("index2: ", index);
+  };
   //create animation
   const transitions = useTransition(index, (p) => p, {
     from: { opacity: 0, transform: "translate3d(100%,0,0)" },
@@ -74,18 +85,30 @@ function App({ content = [], config = {}, background = [] }) {
   });
 
   return (
-    <div className={styles.simpleTransMain} onClick={onClick}>
+    <div className={styles.simpleTransMain}>
+      <span
+        className={[styles.arrows, styles.previos].join(" ")}
+        onClick={handleClick}
+      >
+        A
+      </span>
       {transitions.map(({ item, props, key }) => {
         const Page = data[item] || [];
         return <Page key={key} style={props} />;
       })}
+      <span
+        className={[styles.arrows, styles.next].join(" ")}
+        onClick={handleNextClick}
+      >
+        B
+      </span>
     </div>
   );
 }
 
 const Usage = () => {
   return (
-    <App content={myContent} config={myConfig} background={myBackground} />
+    <App content={myContent2} config={myConfig} background={myBackground} />
   );
 };
 export default Usage;
