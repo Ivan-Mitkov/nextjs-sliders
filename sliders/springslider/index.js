@@ -33,7 +33,9 @@ const myBackground = [
   RedBlackBlue.green,
 ];
 
-function App({ content = [], background = [] }) {
+const myConfig = { mass: 30, tension: 800, friction: 180 };
+
+function App({ content = [], config = {}, background = [] }) {
   const [index, set] = useState(0);
   // initial state need annimated functions
   const [data, setData] = useState(pages);
@@ -68,7 +70,7 @@ function App({ content = [], background = [] }) {
     from: { opacity: 0, transform: "translate3d(100%,0,0)" },
     enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
     leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
-    config: { mass: 30, tension: 800, friction: 180 },
+    config: { ...config },
   });
 
   return (
@@ -82,6 +84,8 @@ function App({ content = [], background = [] }) {
 }
 
 const Usage = () => {
-  return <App content={myContent} background={myBackground} />;
+  return (
+    <App content={myContent} config={myConfig} background={myBackground} />
+  );
 };
 export default Usage;
