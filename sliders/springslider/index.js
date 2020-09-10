@@ -26,6 +26,11 @@ const myBackground = [
   RedBlackBlue.green,
   RedBlackBlue.darkBlue,
   RedBlackBlue.darkRed,
+  RedBlackBlue.lightRed,
+  RedBlackBlue.lightWhite,
+  RedBlackBlue.black,
+  RedBlackBlue.lightBlue,
+  RedBlackBlue.green,
 ];
 
 function App({ content = [], background = [] }) {
@@ -41,8 +46,10 @@ function App({ content = [], background = [] }) {
 
     const myDataContent =
       content.length > 0 &&
-      content.map((x) => ({ style }) => (
-        <animated.div style={{ ...style, background: RedBlackBlue.darkBlue }}>
+      content.map((x, i) => ({ style }) => (
+        <animated.div
+          style={{ ...style, background: background[i % background.length] }}
+        >
           {x}
         </animated.div>
       ));
